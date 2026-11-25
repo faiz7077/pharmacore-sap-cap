@@ -1,0 +1,5 @@
+code;name;criticality
+Q;Quarantine;2
+R;Released;3
+X;Rejected;1
+C;Recalled;1

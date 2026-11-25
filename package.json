@@ -1,0 +1,82 @@
+{
+  "name": "pharmacore",
+  "version": "1.0.0",
+  "description": "PharmaCore \u2013 SAP CAP based pharmaceutical manufacturing, quality & batch traceability (MM / PP-PI / QM / SD)",
+  "scripts": {
+    "start": "cds-serve all --in-memory --with-mocks",
+    "watch": "cds watch",
+    "test": "node --test --test-concurrency=1 test/*.test.js",
+    "sandbox": "cds watch --profile sandbox"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@sap/cds": "^9.9.4",
+    "express": "^4.22.3",
+    "@cap-js/sqlite": "^2.4.3"
+  },
+  "devDependencies": {
+    "@cap-js/cds-test": "^1.0.2",
+    "@sap/cds-dk": "^9.9.8",
+    "axios": "^1.21.1"
+  },
+  "allowScripts": {
+    "better-sqlite3@12.11.1": true
+  },
+  "private": true,
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "credentials": {
+          "url": ":memory:"
+        }
+      },
+      "auth": {
+        "kind": "mocked",
+        "users": {
+          "admin": {
+            "password": "admin",
+            "roles": [
+              "Admin"
+            ]
+          },
+          "priya": {
+            "password": "priya",
+            "roles": [
+              "QualityOfficer"
+            ]
+          },
+          "raj": {
+            "password": "raj",
+            "roles": [
+              "ProductionManager"
+            ]
+          },
+          "amit": {
+            "password": "amit",
+            "roles": [
+              "WarehouseManager"
+            ]
+          }
+        }
+      },
+      "API_PRODUCT_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/API_PRODUCT_SRV",
+        "[sandbox]": {
+          "credentials": {
+            "url": "https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata/sap/API_PRODUCT_SRV",
+            "headers": {
+              "APIKey": "${env.SAP_API_KEY}"
+            }
+          }
+        }
+      }
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

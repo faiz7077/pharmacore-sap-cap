@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PharmaCore · Fiori Launchpad</title>
+  <script>
+  (async function () {
+    const config = {
+  "defaultRenderer": "fiori2",
+  "renderers": {
+    "fiori2": {
+      "componentData": {
+        "config": {
+          "enableSearch": false,
+          "enablePersonalization": false
+        }
+      }
+    }
+  },
+  "services": {
+    "LaunchPage": {
+      "adapter": {
+        "config": {
+          "groups": [
+            {
+              "id": "mm",
+              "title": "Procurement & Inventory (SAP MM)",
+              "isPreset": true,
+              "isVisible": true,
+              "isGroupLocked": false,
+              "tiles": [
+                {
+                  "id": "tile-materials",
+                  "tileType": "sap.ushell.ui.tile.StaticTile",
+                  "properties": {
+                    "title": "Material Master",
+                    "subtitle": "MM · master data",
+                    "icon": "sap-icon://product",
+                    "targetURL": "#Materials-manage"
+                  }
+                },
+                {
+                  "id": "tile-suppliers",
+                  "tileType": "sap.ushell.ui.tile.StaticTile",
+                  "properties": {
+                    "title": "Suppliers",
+                    "subtitle": "MM · approved vendor list",
+                    "icon": "sap-icon://supplier",
+                    "targetURL": "#Suppliers-manage"
+                  }
+                },
+                {
+                  "id": "tile-purchaseorders",
+                  "tileType": "sap.ushell.ui.tile.StaticTile",
+                  "properties": {
+                    "title": "Purchase Orders",
+                    "subtitle": "MM · procure & goods receipt",
+                    "icon": "sap-icon://cart",
+                    "targetURL": "#PurchaseOrders-manage"
+                  }
+                },
+                {
+                  "id": "tile-stock",
+                  "tileType": "sap.ushell.ui.tile.StaticTile",
+                  "properties": {
+                    "title": "Material Documents",
+                    "subtitle": "MM · movement types 101/261/321/601",
+                    "icon": "sap-icon://journey-change",
+                    "targetURL": "#StockMovements-manage"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "pp",
+              "title": "Manufacturing (SAP PP-PI)",
+              "isPreset": true,
+              "isVisible": true,
+              "isGroupLocked": false,
+              "tiles": [
+                {
+                  "id": "tile-boms",
+                  "tileType": "sap.ushell.ui.tile.StaticTile",
+                  "properties": {
+                    "title": "Bills of Materials",
+                    "subtitle": "PP-PI · master recipe",
+                    "icon": "sap-icon://tree",
+                    "targetURL": "#BOMs-manage"
+                  }
+                },
+                {
+                  "id": "tile-productionorders",
+                  "tileType": "sap.ushell.ui.tile.DynamicTile",
+                  "properties": {
+                    "title": "Production Orders",
+                    "subtitle": "PP-PI · release & confirm",
+                    "icon": "sap-icon://factory",
+                    "targetURL": "#ProductionOrders-manage",
+                    "serviceUrl": "/kpi/openOrders",
+                    "serviceRefreshInterval": 15
+                  }
+                }
+              ]
+            },
+            {
+              "id": "qm",
+              "title": "Quality & Traceability (SAP QM)",
+              "isPreset": true,
+              "isVisible": true,
+              "isGroupLocked": false,
+              "tiles": [
+                {
+                  "id": "tile-expiring",
+                  "tileType": "sap.ushell.ui.tile.DynamicTile",
+                  "properties": {
+                    "title": "Expiring Stock",
+                    "subtitle": "released batches ≤ 90 days",
+                    "icon": "sap-icon://lateness",
+                    "targetURL": "#Batches-manage",
+                    "serviceUrl": "/kpi/expiring",
+                    "serviceRefreshInterval": 15
+                  }
+                },
+                {
+                  "id": "tile-inspectionlots",
+                  "tileType": "sap.ushell.ui.tile.DynamicTile",
+                  "properties": {
+                    "title": "Inspection Lots",
+                    "subtitle": "QM · results & usage decision",
+                    "icon": "sap-icon://lab",
+                    "targetURL": "#InspectionLots-manage",
+                    "serviceUrl": "/kpi/openLots",
+                    "serviceRefreshInterval": 15
+                  }
+                },
+                {
+                  "id": "tile-batches",
+                  "tileType": "sap.ushell.ui.tile.DynamicTile",
+                  "properties": {
+                    "title": "Batch Traceability",
+                    "subtitle": "QM · genealogy, expiry & recall",
+                    "icon": "sap-icon://batch-payments",
+                    "targetURL": "#Batches-manage",
+                    "serviceUrl": "/kpi/quarantine",
+                    "serviceRefreshInterval": 15
+                  }
+                },
+                {
+                  "id": "tile-recalls",
+                  "tileType": "sap.ushell.ui.tile.DynamicTile",
+                  "properties": {
+                    "title": "Recalls",
+                    "subtitle": "QM · recall cases",
+                    "icon": "sap-icon://alert",
+                    "targetURL": "#Recalls-manage",
+                    "serviceUrl": "/kpi/recalls",
+                    "serviceRefreshInterval": 15
+                  }
+                },
+                {
+                  "id": "tile-genealogy",
+                  "tileType": "sap.ushell.ui.tile.StaticTile",
+                  "properties": {
+                    "title": "Genealogy Explorer",
+                    "subtitle": "raw material ⇄ finished batch",
+                    "icon": "sap-icon://org-chart",
+                    "targetURL": "/genealogy/index.html"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "sd",
+              "title": "Sales & Distribution (SAP SD)",
+              "isPreset": true,
+              "isVisible": true,
+              "isGroupLocked": false,
+              "tiles": [
+                {
+                  "id": "tile-customers",
+                  "tileType": "sap.ushell.ui.tile.StaticTile",
+                  "properties": {
+                    "title": "Customers",
+                    "subtitle": "SD · licensed distributors",
+                    "icon": "sap-icon://customer",
+                    "targetURL": "#Customers-manage"
+                  }
+                },
+                {
+                  "id": "tile-salesorders",
+                  "tileType": "sap.ushell.ui.tile.StaticTile",
+                  "properties": {
+                    "title": "Sales Orders",
+                    "subtitle": "SD · FEFO delivery",
+                    "icon": "sap-icon://sales-order",
+                    "targetURL": "#SalesOrders-manage"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "admin",
+              "title": "Compliance",
+              "isPreset": true,
+              "isVisible": true,
+              "isGroupLocked": false,
+              "tiles": [
+                {
+                  "id": "tile-auditlog",
+                  "tileType": "sap.ushell.ui.tile.StaticTile",
+                  "properties": {
+                    "title": "Audit Trail",
+                    "subtitle": "GMP · 21 CFR Part 11 style",
+                    "icon": "sap-icon://history",
+                    "targetURL": "#AuditLog-manage"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "ClientSideTargetResolution": {
+      "adapter": {
+        "config": {
+          "inbounds": {
+            "materials": {
+              "semanticObject": "Materials",
+              "action": "manage",
+              "title": "Material Master",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=pharmacore.materials",
+                "url": "/materials/webapp"
+              }
+            },
+            "suppliers": {
+              "semanticObject": "Suppliers",
+              "action": "manage",
+              "title": "Suppliers",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=pharmacore.suppliers",
+                "url": "/suppliers/webapp"
+              }
+            },
+            "purchaseorders": {
+              "semanticObject": "PurchaseOrders",
+              "action": "manage",
+              "title": "Purchase Orders",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=pharmacore.purchaseorders",
+                "url": "/purchaseorders/webapp"
+              }
+            },
+            "stock": {
+              "semanticObject": "StockMovements",
+              "action": "manage",
+              "title": "Material Documents",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=pharmacore.stock",
+                "url": "/stock/webapp"
+              }
+            },
+            "boms": {
+              "semanticObject": "BOMs",
+              "action": "manage",
+              "title": "Bills of Materials",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=pharmacore.boms",
+                "url": "/boms/webapp"
+              }
+            },
+            "productionorders": {
+              "semanticObject": "ProductionOrders",
+              "action": "manage",
+              "title": "Production Orders",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=pharmacore.productionorders",
+                "url": "/productionorders/webapp"
+              }
+            },
+            "inspectionlots": {
+              "semanticObject": "InspectionLots",
+              "action": "manage",
+              "title": "Inspection Lots",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=pharmacore.inspectionlots",
+                "url": "/inspectionlots/webapp"
+              }
+            },
+            "batches": {
+              "semanticObject": "Batches",
+              "action": "manage",
+              "title": "Batch Traceability",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=pharmacore.batches",
+                "url": "/batches/webapp"
+              }
+            },
+            "recalls": {
+              "semanticObject": "Recalls",
+              "action": "manage",
+              "title": "Recalls",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=pharmacore.recalls",
+                "url": "/recalls/webapp"
+              }
+            },
+            "customers": {
+              "semanticObject": "Customers",
+              "action": "manage",
+              "title": "Customers",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=pharmacore.customers",
+                "url": "/customers/webapp"
+              }
+            },
+            "salesorders": {
+              "semanticObject": "SalesOrders",
+              "action": "manage",
+              "title": "Sales Orders",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=pharmacore.salesorders",
+                "url": "/salesorders/webapp"
+              }
+            },
+            "auditlog": {
+              "semanticObject": "AuditLog",
+              "action": "manage",
+              "title": "Audit Trail",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=pharmacore.auditlog",
+                "url": "/auditlog/webapp"
+              }
+            }
+          }
+        }
+      }
+    },
+    "NavTargetResolutionInternal": {
+      "config": {
+        "enableClientSideTargetResolution": true
+      }
+    }
+  }
+};
+    // Live KPIs for the dynamic tiles (the sandbox shell does not evaluate serviceUrl itself)
+    const tiles = config.services.LaunchPage.adapter.config.groups.flatMap(g => g.tiles).filter(t => t.properties.serviceUrl);
+    await Promise.all(tiles.map(async t => {
+      try {
+        const { d } = await fetch(t.properties.serviceUrl, { cache: "no-store" }).then(r => r.json());
+        Object.assign(t.properties, { numberValue: d.number, numberUnit: d.numberUnit, info: d.info, infoState: d.infoState,
+          numberState: d.infoState === "Error" ? "Negative" : d.infoState === "Critical" ? "Critical" : d.infoState === "Positive" ? "Positive" : "Neutral" });
+      } catch (e) { /* tile simply shows no number */ }
+    }));
+    window["sap-ushell-config"] = config;
+    const load = (src, attrs = {}) => new Promise((res, rej) => {
+      const el = document.createElement("script"); el.src = src; Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+      el.onload = res; el.onerror = rej; document.head.appendChild(el);
+    });
+    await load("https://ui5.sap.com/1.136.22/test-resources/sap/ushell/bootstrap/sandbox.js");
+    await load("https://ui5.sap.com/1.136.22/resources/sap-ui-core.js", {
+      id: "sap-ui-bootstrap", "data-sap-ui-libs": "sap.m, sap.ushell, sap.fe.templates", "data-sap-ui-theme": "sap_horizon",
+      "data-sap-ui-compat-version": "edge", "data-sap-ui-async": "true", "data-sap-ui-frame-options": "allow",
+      "data-sap-ui-resource-roots": JSON.stringify({"pharmacore.materials": "./materials/webapp", "pharmacore.suppliers": "./suppliers/webapp", "pharmacore.purchaseorders": "./purchaseorders/webapp", "pharmacore.stock": "./stock/webapp", "pharmacore.boms": "./boms/webapp", "pharmacore.productionorders": "./productionorders/webapp", "pharmacore.inspectionlots": "./inspectionlots/webapp", "pharmacore.batches": "./batches/webapp", "pharmacore.recalls": "./recalls/webapp", "pharmacore.customers": "./customers/webapp", "pharmacore.salesorders": "./salesorders/webapp", "pharmacore.auditlog": "./auditlog/webapp"})
+    });
+    sap.ui.require(["sap/ui/core/Core"], async function (Core) {
+      await Core.ready();
+      sap.ushell.Container.createRenderer("fiori2", true).then(r => r.placeAt("content"));
+    });
+  })();
+  </script>
+</head>
+<body class="sapUiBody" id="content"></body>
+</html>

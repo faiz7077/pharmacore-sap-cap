@@ -1,0 +1,7 @@
+ID;materialNo;name;type_code;baseUnit;shelfLifeMonths;minRemainingShelfLifeDays;storageCondition;standardPrice
+a0000000-0000-0000-0000-000000000001;RM-PCM-001;Paracetamol IP (API);ROH;KG;36;0;Store below 25°C, dry;420.00
+a0000000-0000-0000-0000-000000000002;RM-MCC-002;Microcrystalline Cellulose PH101;ROH;KG;48;0;Store below 30°C;180.00
+a0000000-0000-0000-0000-000000000003;RM-STA-003;Maize Starch;ROH;KG;24;0;Store below 30°C, dry;60.00
+a0000000-0000-0000-0000-000000000004;RM-MGS-004;Magnesium Stearate;ROH;KG;36;0;Store below 30°C;350.00
+a0000000-0000-0000-0000-000000000005;PM-BLS-005;PVC/Alu Blister Foil;VERP;KG;60;0;Ambient;250.00
+a0000000-0000-0000-0000-000000000010;FG-PCM-500;Paracetamol 500 mg Tablets;FERT;EA;24;180;Store below 25°C, protect from light;0.45

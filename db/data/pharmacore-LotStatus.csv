@@ -1,0 +1,5 @@
+code;name;criticality
+OPEN;Open;2
+RREC;Results recorded;2
+ACC;Accepted;3
+REJ;Rejected;1

@@ -1,0 +1,6 @@
+code;name
+101;Goods receipt
+261;Goods issue to production order
+321;Quality inspection to unrestricted
+350;Quality inspection to blocked
+601;Goods issue for delivery

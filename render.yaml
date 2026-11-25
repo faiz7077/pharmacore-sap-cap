@@ -1,0 +1,15 @@
+# Render Blueprint – public demo instance
+services:
+  - type: web
+    name: pharmacore
+    runtime: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /index.html
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      # Demo profile: mocked users + in-memory SQLite seeded on every start
+      - key: NODE_ENV
+        value: development

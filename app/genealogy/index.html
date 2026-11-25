@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Genealogy Explorer</title>
+<style>
+  :root { --bg:#f5f6f7; --card:#fff; --ink:#1d2d3e; --muted:#556b82; --line:#d9dee3; --brand:#0a6ed1;
+          --ok:#256f3a; --okbg:#e7f4ea; --warn:#a93e00; --warnbg:#fff3e0; --bad:#aa0808; --badbg:#ffeaea; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#12171c; --card:#1d232a; --ink:#e6eaee; --muted:#9aa8b6; --line:#2e3740; --brand:#4db1ff;
+          --ok:#6fd38b; --okbg:#173022; --warn:#ffb36b; --warnbg:#3a2510; --bad:#ff8a8a; --badbg:#3a1616; } }
+  * { box-sizing: border-box } body { margin:0; font:14px/1.45 "72", system-ui, -apple-system, sans-serif; background:var(--bg); color:var(--ink) }
+  header { background:var(--card); border-bottom:1px solid var(--line); padding:12px 16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap }
+  header h1 { font-size:16px; margin:0 } header a { color:var(--brand); text-decoration:none; margin-left:auto }
+  main { max-width:1100px; margin:0 auto; padding:16px } select { font:inherit; padding:6px 8px; border:1px solid var(--line); border-radius:6px; background:var(--card); color:var(--ink); max-width:100% }
+  .cols { display:grid; grid-template-columns: 1fr auto 1fr; gap:12px; align-items:start; margin-top:16px }
+  @media (max-width: 760px) { .cols { grid-template-columns: 1fr } .arrow { transform: rotate(90deg); justify-self:center } }
+  .col h2 { font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin:0 0 8px }
+  .node { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-bottom:8px }
+  .node.root { border:2px solid var(--brand) } .node b { font-variant-numeric: tabular-nums }
+  .node small { color:var(--muted); display:block } .arrow { font-size:28px; color:var(--muted); padding-top:28px }
+  .pill { display:inline-block; font-size:11px; padding:1px 8px; border-radius:99px; margin-left:6px }
+  .R { color:var(--ok); background:var(--okbg) } .Q { color:var(--warn); background:var(--warnbg) } .X, .C { color:var(--bad); background:var(--badbg) }
+  .ship { border-left:4px solid var(--brand) } .empty { color:var(--muted); font-style:italic }
+</style>
+</head>
+<body>
+<header><h1>Batch Genealogy Explorer</h1><select id="pick" aria-label="Batch"></select><a href="/index.html">← Launchpad</a></header>
+<main>
+  <p style="color:var(--muted);margin:0">Select any batch to see which raw-material batches went into it and where it went — the basis for a pharmaceutical recall.</p>
+  <div class="cols">
+    <section class="col"><h2>Made from (backward)</h2><div id="back"></div></section>
+    <div class="arrow">→</div>
+    <section class="col"><h2>Selected batch → used in / shipped to (forward)</h2><div id="fwd"></div></section>
+  </div>
+</main>
+<script>
+const S = { Q: 'Quarantine', R: 'Released', X: 'Rejected', C: 'Recalled' }
+const api = p => fetch('/odata/v4/quality/' + p, { credentials: 'include' }).then(r => { if (!r.ok) throw new Error(r.status); return r.json() })
+const card = (n, cls = '') => `<div class="node ${cls}" style="margin-left:${Math.max(0, n.level - 1) * 16}px">
+  <b>${n.batchNo}</b><span class="pill ${n.status}">${S[n.status] || n.status}</span>
+  <small>${n.material} · ${Number(n.quantity).toLocaleString()}${n.customer ? ' → ' + n.customer : ''}</small></div>`
+async function load(id) {
+  const { value } = await api(`Batches(${id})/QualityService.trace()`)
+  const back = value.filter(n => n.direction === 'BACKWARD'), root = value.find(n => n.direction === 'ROOT')
+  const fwd = value.filter(n => n.direction === 'FORWARD' || n.direction === 'SHIPPED')
+  document.getElementById('back').innerHTML = back.map(n => card(n)).join('') || '<p class="empty">Purchased material – no inputs.</p>'
+  document.getElementById('fwd').innerHTML = card({ ...root, level: 0 }, 'root') +
+    (fwd.map(n => card(n, n.direction === 'SHIPPED' ? 'ship' : '')).join('') || '<p class="empty">Not yet used or shipped.</p>')
+  history.replaceState(null, '', '#' + id)
+}
+api('Batches?$select=ID,batchNo,origin&$expand=material($select=name)&$orderby=batchNo desc').then(({ value }) => {
+  const sel = document.getElementById('pick')
+  sel.innerHTML = value.map(b => `<option value="${b.ID}">${b.batchNo} – ${b.material.name}</option>`).join('')
+  const start = location.hash.slice(1) || value.find(b => b.origin === 'PROD')?.ID || value[0]?.ID
+  if (start) { sel.value = start; load(start) }
+  sel.onchange = () => load(sel.value)
+}).catch(e => document.querySelector('main').insertAdjacentHTML('beforeend', `<p class="empty">Could not load batches (${e.message}). Log in as a quality user (priya / priya).</p>`))
+</script>
+</body>
+</html>
