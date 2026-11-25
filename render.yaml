@@ -1,7 +1,7 @@
 # Render Blueprint – public demo instance
 services:
   - type: web
-    name: pharmacore
+    name: pharmacore-sap-cap
     runtime: node
     plan: free
     buildCommand: npm ci
