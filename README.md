@@ -5,6 +5,10 @@ It uses **CDS** domain models, **OData V4** services, **SAP Fiori Elements** app
 **SAP S/4HANA API integration** (`API_PRODUCT_SRV`). It covers the GMP lifecycle of a tablet batch, from raw-material
 purchase to the customer and back again when there's a recall.
 
+**Live demo:** https://pharmacore-sap-cap.onrender.com (log in as `admin` / `admin`, or see the role users below)
+
+> Demo instance on a free tier: the first load after idle can take about a minute, and the data resets to the seed set on every restart.
+
 ```
 Purchase order ─► Goods receipt (101) ─► QUARANTINE ─► Inspection lot (01) ─► Usage decision ─► RELEASED
                                                                                         │
